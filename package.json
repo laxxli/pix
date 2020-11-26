@@ -29,6 +29,7 @@
     "coveralls": "^3.0.9",
     "eslint": "^6.7.1",
     "eslint-plugin-mocha": "^6.2.2",
+    "eslint-plugin-yaml": "^0.3.0",
     "lcov-result-merger": "^3.1.0",
     "mocha": "^6.2.2",
     "sinon": "^7.5.0"
@@ -66,6 +67,7 @@
     "coverage:coveralls": "cat coverage/lcov.info | COVERALLS_SERVICE_NAME=circleci COVERALLS_REPO_TOKEN=7ZqXV3M8PYB3iWKIFbIbDCnKkpr7k19wP coveralls",
     "coverage:merge": "lcov-result-merger 'coverage/*_lcov.info' 'coverage/lcov.info'",
     "lint": "run-p --print-label lint:api lint:mon-pix lint:orga lint:certif lint:admin",
+    "lint:config": "eslint --no-ignore .circleci/config.yml && eslint .github/workflows/auto-merge.yml",
     "lint:admin": "cd admin && npm run lint",
     "lint:api": "cd api && npm run lint",
     "lint:certif": "cd certif && npm run lint",
