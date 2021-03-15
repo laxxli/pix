@@ -1,4 +1,4 @@
-module.exports = class Session {
+class Session {
   constructor({
     certificationCenterId,
     address,
@@ -17,4 +17,35 @@ module.exports = class Session {
     this.time = time;
     this.description = description;
   }
+
+  static schedule({
+    certificationCenterId,
+    address,
+    examiner,
+    room,
+    date,
+    time,
+    description,
+  }) {
+    return new Session({
+      certificationCenterId,
+      address,
+      examiner,
+      room,
+      date,
+      time,
+      description,
+    });
+  }
+}
+
+class SessionDateShouldNotBeInThePastError extends Error {
+  constructor(message = 'Erreur lors de la plannification de la session. La date ne doit pas être dans le passé.') {
+    super(message);
+  }
+}
+
+module.exports = {
+  Session,
+  SessionDateShouldNotBeInThePastError,
 };
