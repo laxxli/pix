@@ -15,7 +15,7 @@ async function scheduleSession({
 
   const referentMemberships = await certificationCenterMembershipRepository.find({ referentId, certificationCenterId });
 
-  if (!referentMemberships.length) {
+  if (referentMemberships.length < 1) {
     throw new ReferentIsNotAMemberOfCertificationCenterError();
   }
 
