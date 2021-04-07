@@ -1,3 +1,5 @@
+const { validate } = require('./SessionValidator');
+
 class Session {
   constructor({
     certificationCenterId,
@@ -10,7 +12,6 @@ class Session {
     time,
     description,
   }) {
-    // TODO : throw if required properties are missing
     this.certificationCenterId = certificationCenterId;
     this.certificationCenterName = certificationCenterName;
     this.accessCode = accessCode;
@@ -20,6 +21,8 @@ class Session {
     this.date = date;
     this.time = time;
     this.description = description;
+
+    validate(this);
   }
 
   static schedule({
@@ -33,6 +36,8 @@ class Session {
     time,
     description,
   }) {
+    // On ne peut pas, avec certitude, valider la règle de "date ne doit pas être avant aujourd'hui"
+    // car on ne connaît pas la timezone du lieu où se déroule la session
     return new Session({
       certificationCenterId,
       certificationCenterName,

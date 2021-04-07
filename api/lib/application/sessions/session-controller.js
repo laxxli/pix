@@ -1,5 +1,6 @@
 const { BadRequestError, SessionPublicationBatchError } = require('../http-errors');
 const usecases = require('../../domain/usecases');
+const scheduleSession = require('../../certification-session-scheduling/domain/usecases').scheduleSession;
 const tokenService = require('../../domain/services/token-service');
 const sessionResultsLinkService = require('../../domain/services/session-results-link-service');
 const sessionValidator = require('../../domain/validators/session-validator');
@@ -51,9 +52,26 @@ module.exports = {
 
   async save(request) {
     const userId = request.auth.credentials.userId;
-    const session = sessionSerializer.deserialize(request.payload);
+    const {
+      certificationCenterId,
+      address,
+      examiner,
+      room,
+      date,
+      time,
+      description,
+    } = sessionSerializer.deserialize(request.payload);
 
-    const newSession = await usecases.createSession({ userId, session });
+    const newSession = await scheduleSession({
+      certificationCenterId,
+      address,
+      examiner,
+      room,
+      date,
+      time,
+      description,
+      referentId: userId,
+    });
 
     return sessionSerializer.serialize(newSession);
   },
