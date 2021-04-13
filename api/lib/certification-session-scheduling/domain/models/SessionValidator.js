@@ -5,8 +5,8 @@ module.exports = {
 };
 
 const schema = Joi.object({
-  certificationCenterId: Joi.number().integer().required(),
-  certificationCenter: Joi.any(),
+  certificationCenterId: Joi.number().integer().positive().required(),
+  certificationCenterName: Joi.any(),
   accessCode: Joi.any(),
   address: Joi.any(),
   examiner: Joi.any(),

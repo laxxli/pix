@@ -1,7 +1,7 @@
 class Session {
   constructor({
     certificationCenterId,
-    certificationCenter,
+    certificationCenterName,
     accessCode,
     address,
     examiner,
@@ -12,7 +12,7 @@ class Session {
   }) {
     // TODO : throw if required properties are missing
     this.certificationCenterId = certificationCenterId;
-    this.certificationCenter = certificationCenter;
+    this.certificationCenterName = certificationCenterName;
     this.accessCode = accessCode;
     this.address = address;
     this.examiner = examiner;
@@ -24,7 +24,7 @@ class Session {
 
   static schedule({
     certificationCenterId,
-    certificationCenter,
+    certificationCenterName,
     accessCode,
     address,
     examiner,
@@ -35,7 +35,7 @@ class Session {
   }) {
     return new Session({
       certificationCenterId,
-      certificationCenter,
+      certificationCenterName,
       accessCode,
       address,
       examiner,
