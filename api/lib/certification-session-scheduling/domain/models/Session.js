@@ -1,4 +1,5 @@
-const { validate } = require('./SessionValidator');
+const { validate: validateSession } = require('./SessionValidator');
+const { validate: validateAccessCode } = require('./AccessCodeValidator');
 
 class Session {
   constructor({
@@ -22,7 +23,7 @@ class Session {
     this.time = time;
     this.description = description;
 
-    validate(this);
+    validateSession(this);
   }
 
   static schedule({
@@ -58,7 +59,18 @@ class SessionDateShouldNotBeInThePastError extends Error {
   }
 }
 
+class AccessCode {
+  constructor({
+    value,
+  }) {
+    this.value = value;
+
+    validateAccessCode(this);
+  }
+}
+
 module.exports = {
+  AccessCode,
   Session,
   SessionDateShouldNotBeInThePastError,
 };
