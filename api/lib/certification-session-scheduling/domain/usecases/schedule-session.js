@@ -11,23 +11,26 @@ async function scheduleSession({
   referentId,
   sessionRepository,
   certificationCenterMembershipRepository,
+  certificationCenterRepository,
+  random,
 }) {
-
   const referentMemberships = await certificationCenterMembershipRepository.find({ referentId, certificationCenterId });
 
   if (referentMemberships.length < 1) {
     throw new ReferentIsNotAMemberOfCertificationCenterError();
   }
 
+  const certificationCenter = await certificationCenterRepository.get(certificationCenterId);
   const scheduledSession = Session.schedule({
     certificationCenterId,
+    certificationCenterName: certificationCenter.name,
     address,
     examiner,
     room,
     date,
     time,
     description,
-  });
+  }, random.pickOneFrom);
 
   await sessionRepository.save(scheduledSession);
 }
