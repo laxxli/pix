@@ -29,20 +29,19 @@ class Session {
   static schedule({
     certificationCenterId,
     certificationCenterName,
-    accessCode,
     address,
     examiner,
     room,
     date,
     time,
     description,
-  }) {
+  }, pickOneFrom) {
     // On ne peut pas, avec certitude, valider la règle de "date ne doit pas être avant aujourd'hui"
     // car on ne connaît pas la timezone du lieu où se déroule la session
     return new Session({
       certificationCenterId,
       certificationCenterName,
-      accessCode,
+      accessCode: AccessCode.generate(pickOneFrom),
       address,
       examiner,
       room,
@@ -53,12 +52,8 @@ class Session {
   }
 }
 
-class SessionDateShouldNotBeInThePastError extends Error {
-  constructor(message = 'Erreur lors de la plannification de la session. La date ne doit pas être dans le passé.') {
-    super(message);
-  }
-}
-
+const validLettersInAccessCode = 'ABCDEFGHIJKLMNOPQRSTUVWXZ'.split('');
+const validNumbersInAccessCode = '0123456789'.split('');
 class AccessCode {
   constructor({
     value,
@@ -67,10 +62,20 @@ class AccessCode {
 
     validateAccessCode(this);
   }
+
+  static generate(pickOneFrom) {
+    const value =
+      pickOneFrom(validLettersInAccessCode) +
+      pickOneFrom(validLettersInAccessCode) +
+      pickOneFrom(validLettersInAccessCode) +
+      pickOneFrom(validLettersInAccessCode) +
+      pickOneFrom(validNumbersInAccessCode) +
+      pickOneFrom(validNumbersInAccessCode);
+    return new AccessCode({ value });
+  }
 }
 
 module.exports = {
   AccessCode,
   Session,
-  SessionDateShouldNotBeInThePastError,
 };
