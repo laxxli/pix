@@ -50,7 +50,7 @@ module.exports = {
     return sessionSerializer.serialize(session);
   },
 
-  async save(request) {
+  async schedule(request) {
     const userId = request.auth.credentials.userId;
     const {
       certificationCenterId,

@@ -22,6 +22,7 @@ const tokenService = require('../../../../lib/domain/services/token-service');
 const { SessionPublicationBatchResult } = require('../../../../lib/domain/models/SessionPublicationBatchResult');
 const logger = require('../../../../lib/infrastructure/logger');
 const { SessionPublicationBatchError } = require('../../../../lib/application/http-errors');
+const { scheduleSession } = require('../../../../lib/certification-session-scheduling/domain/usecases/schedule-session');
 
 describe('Unit | Controller | sessionController', () => {
 
@@ -29,7 +30,7 @@ describe('Unit | Controller | sessionController', () => {
   let expectedSession;
   const userId = 274939274;
 
-  describe('#create', () => {
+  describe('#schedule', () => {
 
     beforeEach(() => {
       expectedSession = new Session({
@@ -43,7 +44,7 @@ describe('Unit | Controller | sessionController', () => {
         accessCode: 'ABCD12',
       });
 
-      sinon.stub(usecases, 'createSession').resolves();
+      sinon.stub(scheduleSession).resolves();
       sinon.stub(sessionSerializer, 'deserialize').returns(expectedSession);
       sinon.stub(sessionSerializer, 'serialize');
 
@@ -70,37 +71,12 @@ describe('Unit | Controller | sessionController', () => {
       };
     });
 
-    it('should save the session', async () => {
+    it('should schedule the session', async () => {
       // when
       await sessionController.save(request, hFake);
 
       // then
       expect(usecases.createSession).to.have.been.calledWith({ userId, session: expectedSession });
-    });
-
-    it('should return the saved session in JSON API', async () => {
-      // given
-      const jsonApiSession = {
-        data: {
-          type: 'sessions',
-          id: 12,
-          attributes: {},
-        },
-      };
-      const savedSession = new Session({
-        id: '12',
-        certificationCenter: 'Université de dressage de loutres',
-      });
-
-      usecases.createSession.resolves(savedSession);
-      sessionSerializer.serialize.returns(jsonApiSession);
-
-      // when
-      const response = await sessionController.save(request, hFake);
-
-      // then
-      expect(response).to.deep.equal(jsonApiSession);
-      expect(sessionSerializer.serialize).to.have.been.calledWith(savedSession);
     });
   });
 

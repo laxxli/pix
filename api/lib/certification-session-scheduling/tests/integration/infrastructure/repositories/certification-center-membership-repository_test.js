@@ -2,16 +2,15 @@ const {
   expect,
   databaseBuilder,
 } = require('../../../../../../tests/test-helper');
-
 const certificationCenterMembershipRepository = require('../../../../infrastructure/repositories/certification-center-membership-repository');
 
 describe('Integration | Repositories | certificationCenterMembership', () => {
 
-  describe('#find', () => {
+  describe('#exists', () => {
 
     context('when the referent is not member of the certification center', () => {
 
-      it('returns an empty list', async () => {
+      it('returns false', async () => {
         // given
         const referentId = 2;
         const certificationCenterId = 2;
@@ -31,20 +30,21 @@ describe('Integration | Repositories | certificationCenterMembership', () => {
         });
 
         await databaseBuilder.commit();
+
         // when
-        const result = await certificationCenterMembershipRepository.find({
+        const result = await certificationCenterMembershipRepository.exists({
           referentId: 12,
           certificationCenterId,
         });
 
         // then
-        expect(result).to.deep.equal([]);
+        expect(result).to.be.false;
       });
     });
 
     context('when the referent is a member of the certification center', () => {
 
-      it('returns a list of memberships', async () => {
+      it('returns true', async () => {
         // given
         const referentId = 2;
         const certificationCenterId = 2;
@@ -66,16 +66,13 @@ describe('Integration | Repositories | certificationCenterMembership', () => {
         await databaseBuilder.commit();
 
         // when
-        const result = await certificationCenterMembershipRepository.find({
+        const result = await certificationCenterMembershipRepository.exists({
           referentId,
           certificationCenterId,
         });
 
         // then
-        expect(result).to.deep.equal([{
-          userId: 2,
-          certificationCenterId: 2,
-        }]);
+        expect(result).to.be.true;
       });
     });
   });

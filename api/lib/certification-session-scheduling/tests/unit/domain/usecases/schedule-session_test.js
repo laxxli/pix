@@ -1,6 +1,5 @@
 const { expect, sinon, catchErr } = require('../../../../../../tests/test-helper');
 const { Session, AccessCode } = require('../../../../domain/models/Session');
-const CertificationCenterMembership = require('../../../../domain/models/CertificationCenterMembership');
 const { CertificationCenter } = require('../../../../domain/models/CertificationCenter');
 const { scheduleSession, ReferentIsNotAMemberOfCertificationCenterError } = require('../../../../domain/usecases/schedule-session.js');
 
@@ -11,7 +10,7 @@ describe('Unit | Domain | Usecases | schedule-session', () => {
     it('schedules a session', async () => {
       // given
       const certificationCenterMembershipRepository = {
-        find: sinon.stub(),
+        exists: sinon.stub(),
       };
       const sessionRepository = {
         save: sinon.stub(),
@@ -45,10 +44,9 @@ describe('Unit | Domain | Usecases | schedule-session', () => {
         referentId: 1234,
       };
 
-      const certificationCenterMembership = new CertificationCenterMembership({ userId: 1234, certificationCenterId: 27 });
-      certificationCenterMembershipRepository.find
+      certificationCenterMembershipRepository.exists
         .withArgs({ referentId: 1234, certificationCenterId: 27 })
-        .resolves([certificationCenterMembership]);
+        .resolves(true);
       const certificationCenter = new CertificationCenter({ name: 'La France !' });
       certificationCenterRepository.get
         .withArgs(27)
@@ -93,12 +91,12 @@ describe('Unit | Domain | Usecases | schedule-session', () => {
       };
 
       const certificationCenterMembershipRepository = {
-        find: sinon.stub(),
+        exists: sinon.stub(),
       };
 
-      certificationCenterMembershipRepository.find
+      certificationCenterMembershipRepository.exists
         .withArgs({ referentId: 1234, certificationCenterId: 27 })
-        .resolves([]);
+        .resolves(false);
 
       const sessionRepository = {
         save: sinon.stub(),

@@ -1,25 +1,18 @@
 const { knex } = require('../../../../db/knex-database-connection');
-const CertificationCenterMembership = require('../../domain/models/CertificationCenterMembership');
 
-async function find({
+async function exists({
   referentId,
   certificationCenterId,
 }) {
-  const certificationCenterMemberships = await knex('certification-center-memberships')
-    .select('userId', 'certificationCenterId')
+  const { count } = await knex('certification-center-memberships')
+    .count()
     .where('certificationCenterId', certificationCenterId)
-    .where('userId', referentId);
+    .where('userId', referentId)
+    .first();
 
-  return certificationCenterMemberships.map(_toDomain);
-}
-
-function _toDomain(certificationCenterMembershipDTO) {
-  return new CertificationCenterMembership({
-    userId: certificationCenterMembershipDTO.userId,
-    certificationCenterId: certificationCenterMembershipDTO.certificationCenterId,
-  });
+  return count > 0;
 }
 
 module.exports = {
-  find,
+  exists,
 };

@@ -25,16 +25,16 @@ describe('Integration | Repositories | session', () => {
 
       const sessionDTO = {
         certificationCenterId,
-        certificationCenter: 'Centre des Anne-Etoiles',
+        certificationCenterName: 'Centre des Anne-Etoiles',
         address: '18 rue Jean Dussourd',
         room: '204',
         accessCode: 'AZER12',
         examiner: 'Julie Dupont',
         date: '2021-03-26',
-        time: '12:00:00',
+        time: '12:00',
         description: 'Ma session',
       };
-      const session = Session.schedule(sessionDTO);
+      const session = new Session(sessionDTO);
 
       await databaseBuilder.commit();
 
@@ -42,10 +42,9 @@ describe('Integration | Repositories | session', () => {
       await sessionRepository.save(session);
 
       // then
-      const foundSessions = await knex
+      const foundSession = await knex
         .select(
           'certificationCenterId',
-          'certificationCenter',
           'address',
           'room',
           'accessCode',
@@ -54,9 +53,14 @@ describe('Integration | Repositories | session', () => {
           'time',
           'description',
         )
-        .from('sessions');
+        .select({
+          'certificationCenterName': 'certificationCenter',
+        })
+        .from('sessions')
+        .first();
+      foundSession.time = foundSession.time.substr(0, 5);
 
-      expect(foundSessions).to.deep.equal([sessionDTO]);
+      expect(foundSession).to.deep.equal(sessionDTO);
     });
   });
 });
