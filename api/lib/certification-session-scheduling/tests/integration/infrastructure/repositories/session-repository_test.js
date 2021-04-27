@@ -13,6 +13,26 @@ describe('Integration | Repositories | session', () => {
     return databaseBuilder.clean();
   });
 
+  describe('#get', () => {
+    afterEach(() => {
+      return knex('sessions').delete();
+    });
+
+    it('returns a session', async () => {
+      // given
+      const sessionId = databaseBuilder.factory.buildSession({
+        room: 'Salle 101',
+      }).id;
+      await databaseBuilder.commit();
+
+      // when
+      const result = await sessionRepository.get(sessionId);
+
+      // then
+      expect(result.room).to.deep.equal('Salle 101');
+    });
+  });
+
   describe('#save', () => {
 
     afterEach(() => {
