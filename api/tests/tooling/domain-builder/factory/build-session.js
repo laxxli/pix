@@ -1,3 +1,4 @@
+// @ts-check
 const Session = require('../../../../lib/domain/models/Session');
 
 module.exports = function buildSession({
@@ -5,7 +6,7 @@ module.exports = function buildSession({
   accessCode = 'ABCD123',
   address = '4 avenue du général perlimpimpim',
   certificationCenter = 'Centre de certif pix',
-  certificationCenterId,
+  certificationCenterId = 1234,
   date = '2021-01-01',
   description = 'Bonne année',
   examiner = 'Flute',
@@ -15,7 +16,7 @@ module.exports = function buildSession({
   finalizedAt = null,
   resultsSentToPrescriberAt = null,
   publishedAt = null,
-  assignedCertificationOfficerId,
+  assignedCertificationOfficerId = null,
   certificationCandidates = [],
 } = {}) {
   return new Session({
