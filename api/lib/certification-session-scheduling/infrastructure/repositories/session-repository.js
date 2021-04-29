@@ -32,8 +32,10 @@ async function save(session) {
     certificationCenter: session.certificationCenterName,
   };
   delete sessionToSave.certificationCenterName;
-  await knex('sessions')
-    .insert(sessionToSave);
+  const returning = await knex('sessions')
+    .insert(sessionToSave)
+    .returning('id');
+  return returning[0];
 }
 
 module.exports = {

@@ -82,5 +82,35 @@ describe('Integration | Repositories | session', () => {
 
       expect(foundSession).to.deep.equal(sessionDTO);
     });
+
+    it('returns the id of the saved session', async() => {
+      // given
+      const certificationCenterId = databaseBuilder.factory.buildCertificationCenter().id;
+
+      const sessionDTO = {
+        certificationCenterId,
+        certificationCenterName: 'Centre des Anne-Etoiles',
+        address: '18 rue Jean Dussourd',
+        room: '204',
+        accessCode: 'AZER12',
+        examiner: 'Julie Dupont',
+        date: '2021-03-26',
+        time: '12:00',
+        description: 'Ma session',
+      };
+      const session = new Session(sessionDTO);
+
+      await databaseBuilder.commit();
+
+      // when
+      const savedSessionId = await sessionRepository.save(session);
+
+      // then
+      const savedSession = await knex
+        .from('sessions')
+        .where({ id: savedSessionId })
+        .first();
+      expect(savedSession).to.exist;
+    });
   });
 });
