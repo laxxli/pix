@@ -32,7 +32,7 @@ async function scheduleSession({
     description,
   }, random.pickOneFrom);
 
-  await sessionRepository.save(scheduledSession);
+  return sessionRepository.save(scheduledSession);
 }
 
 class ReferentIsNotAMemberOfCertificationCenterError extends Error {
