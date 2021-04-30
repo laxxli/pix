@@ -3,7 +3,6 @@ const { expect, sinon, hFake, catchErr } = require('../../../test-helper');
 
 const sessionController = require('../../../../lib/application/sessions/session-controller');
 const usecases = require('../../../../lib/domain/usecases');
-const Session = require('../../../../lib/domain/models/Session');
 
 const sessionSerializer = require('../../../../lib/infrastructure/serializers/jsonapi/session-serializer');
 const jurySessionSerializer = require('../../../../lib/infrastructure/serializers/jsonapi/jury-session-serializer');
@@ -22,38 +21,38 @@ const tokenService = require('../../../../lib/domain/services/token-service');
 const { SessionPublicationBatchResult } = require('../../../../lib/domain/models/SessionPublicationBatchResult');
 const logger = require('../../../../lib/infrastructure/logger');
 const { SessionPublicationBatchError } = require('../../../../lib/application/http-errors');
-const { scheduleSession } = require('../../../../lib/certification-session-scheduling/domain/usecases/schedule-session');
+const usecaseScheduleSession = require('../../../../lib/certification-session-scheduling/domain/usecases');
 
 describe('Unit | Controller | sessionController', () => {
 
   let request;
   let expectedSession;
   const userId = 274939274;
+  const sessionId = Symbol('sessionId');
 
   describe('#schedule', () => {
 
     beforeEach(() => {
-      expectedSession = new Session({
-        certificationCenter: 'Université de dressage de loutres',
+      expectedSession = {
         address: 'Nice',
         room: '28D',
         examiner: 'Antoine Toutvenant',
         date: '2017-12-08',
         time: '14:30',
         description: 'ahah',
-        accessCode: 'ABCD12',
-      });
+        certificationCenterId: 12345,
+        referentId: 274939274,
+      };
 
-      sinon.stub(scheduleSession).resolves();
-      sinon.stub(sessionSerializer, 'deserialize').returns(expectedSession);
-      sinon.stub(sessionSerializer, 'serialize');
+      sinon.stub(usecaseScheduleSession, 'scheduleSession').resolves(sessionId);
+      sinon.stub(usecaseScheduleSession, 'getSession').resolves({});
 
       request = {
         payload: {
           data: {
             type: 'sessions',
             attributes: {
-              'certification-center': 'Université de dressage de loutres',
+              'certification-center-id': 12345,
               address: 'Nice',
               room: '28D',
               examiner: 'Antoine Toutvenant',
@@ -73,10 +72,10 @@ describe('Unit | Controller | sessionController', () => {
 
     it('should schedule the session', async () => {
       // when
-      await sessionController.save(request, hFake);
+      await sessionController.schedule(request, hFake);
 
       // then
-      expect(usecases.createSession).to.have.been.calledWith({ userId, session: expectedSession });
+      expect(usecaseScheduleSession.scheduleSession).to.have.been.calledWith(expectedSession);
     });
   });
 

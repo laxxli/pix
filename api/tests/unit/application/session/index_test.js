@@ -28,7 +28,7 @@ describe('Unit | Application | Sessions | Routes', () => {
     sinon.stub(sessionController, 'get').returns('ok');
     sinon.stub(sessionController, 'getJurySession').returns('ok');
     sinon.stub(sessionController, 'findPaginatedFilteredJurySessions').returns('ok');
-    sinon.stub(sessionController, 'save').returns('ok');
+    sinon.stub(sessionController, 'schedule').returns('ok');
     sinon.stub(sessionController, 'getAttendanceSheet').returns('ok');
     sinon.stub(sessionController, 'update').returns('ok');
     sinon.stub(sessionController, 'importCertificationCandidatesFromAttendanceSheet').returns('ok');

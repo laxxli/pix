@@ -1,6 +1,7 @@
 'use strict';
 
 const { scheduleSession } = require('./schedule-session');
+const getSession = require('./get-session');
 const sessionRepository = require('../../infrastructure/repositories/session-repository');
 const certificationCenterMembershipRepository = require('../../infrastructure/repositories/certification-center-membership-repository');
 const certificationCenterRepository = require('../../infrastructure/repositories/certification-center-repository');
@@ -14,6 +15,13 @@ module.exports = {
       certificationCenterMembershipRepository,
       certificationCenterRepository,
       random,
+    });
+  },
+
+  getSession: (params) => {
+    return getSession({
+      ...params,
+      sessionRepository,
     });
   },
 };
