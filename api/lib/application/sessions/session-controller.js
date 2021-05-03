@@ -53,14 +53,14 @@ module.exports = {
   async schedule(request) {
     const userId = request.auth.credentials.userId;
     const {
-      certificationCenterId,
+      'certification-center-id': certificationCenterId,
       address,
       examiner,
       room,
       date,
       time,
       description,
-    } = sessionSerializer.deserialize(request.payload);
+    } = request.payload.data.attributes;
 
     const sessionId = await certificationSessionSchedulingUsecases.scheduleSession({
       certificationCenterId,
