@@ -1,7 +1,7 @@
 const { Session } = require('../../../../domain/models/Session');
 const { expect } = require('../../../../../../tests/test-helper.js');
 
-describe('Unit | Domain | Models | SessionValidator', () => {
+describe('Unit | Domain | Models | Session | validation', () => {
 
   describe('#validate', () => {
 
