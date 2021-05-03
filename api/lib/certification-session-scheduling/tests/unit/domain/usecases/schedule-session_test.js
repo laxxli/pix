@@ -1,5 +1,6 @@
 const { expect, sinon, catchErr } = require('../../../../../../tests/test-helper');
-const { Session, AccessCode } = require('../../../../domain/models/Session');
+const { Session } = require('../../../../domain/models/Session');
+const { AccessCode } = require('../../../../domain/models/AccessCode');
 const { CertificationCenter } = require('../../../../domain/models/CertificationCenter');
 const { scheduleSession, ReferentIsNotAMemberOfCertificationCenterError } = require('../../../../domain/usecases/schedule-session.js');
 

@@ -1,4 +1,4 @@
-const { AccessCode } = require('../../../../domain/models/Session');
+const { AccessCode } = require('../../../../domain/models/AccessCode');
 const { expect } = require('../../../../../../tests/test-helper.js');
 
 describe('Unit | Domain | Models | AccessCode', function() {

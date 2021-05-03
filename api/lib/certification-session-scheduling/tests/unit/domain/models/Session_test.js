@@ -1,4 +1,5 @@
-const { Session, AccessCode } = require('../../../../domain/models/Session');
+const { Session } = require('../../../../domain/models/Session');
+const { AccessCode } = require('../../../../domain/models/AccessCode');
 const random = require('../../../../infrastructure/random');
 const { expect, sinon } = require('../../../../../../tests/test-helper.js');
 
