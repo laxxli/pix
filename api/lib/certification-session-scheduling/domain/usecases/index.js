@@ -8,13 +8,16 @@ const certificationCenterRepository = require('../../infrastructure/repositories
 const random = require('../../infrastructure/random');
 
 module.exports = {
-  scheduleSession: (params) => {
+  scheduleSession: (command) => {
     return scheduleSession({
-      ...params,
-      sessionRepository,
-      certificationCenterMembershipRepository,
-      certificationCenterRepository,
-      random,
+      command,
+      dependencies:
+      {
+        sessionRepository,
+        certificationCenterMembershipRepository,
+        certificationCenterRepository,
+        random,
+      },
     });
   },
 

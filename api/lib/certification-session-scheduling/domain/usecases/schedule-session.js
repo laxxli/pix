@@ -1,18 +1,22 @@
 const { Session } = require('../models/Session');
 
 async function scheduleSession({
-  certificationCenterId,
-  address,
-  examiner,
-  room,
-  date,
-  time,
-  description,
-  referentId,
-  sessionRepository,
-  certificationCenterMembershipRepository,
-  certificationCenterRepository,
-  random,
+  command: {
+    certificationCenterId,
+    address,
+    examiner,
+    room,
+    date,
+    time,
+    description,
+    referentId,
+  },
+  dependencies: {
+    sessionRepository,
+    certificationCenterMembershipRepository,
+    certificationCenterRepository,
+    random,
+  },
 }) {
   const hasMembership = await certificationCenterMembershipRepository.exists({ referentId, certificationCenterId });
 

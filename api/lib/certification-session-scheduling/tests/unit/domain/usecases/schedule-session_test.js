@@ -67,8 +67,8 @@ describe('Unit | Domain | Usecases | schedule-session', () => {
 
       // when
       await scheduleSession({
-        ...command,
-        ...dependencies,
+        command,
+        dependencies,
       });
 
       // then
@@ -124,8 +124,8 @@ describe('Unit | Domain | Usecases | schedule-session', () => {
 
       // when
       const result = await scheduleSession({
-        ...command,
-        ...dependencies,
+        command,
+        dependencies,
       });
 
       // then
@@ -167,8 +167,8 @@ describe('Unit | Domain | Usecases | schedule-session', () => {
 
       // when
       const error = await catchErr(scheduleSession)({
-        ...command,
-        ...dependencies,
+        command,
+        dependencies,
       });
 
       // then
