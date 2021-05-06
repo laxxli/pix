@@ -1,8 +1,7 @@
 const { expect, sinon, catchErr } = require('../../../../../../tests/test-helper');
-const { Session } = require('../../../../domain/models/Session');
-const { AccessCode } = require('../../../../domain/models/AccessCode');
 const { CertificationCenter } = require('../../../../domain/models/CertificationCenter');
 const { scheduleSession, ReferentIsNotAMemberOfCertificationCenterError } = require('../../../../domain/usecases/schedule-session.js');
+const buildSession = require('../../../tooling/buildSession');
 
 describe('Unit | Domain | Usecases | schedule-session', () => {
 
@@ -53,7 +52,8 @@ describe('Unit | Domain | Usecases | schedule-session', () => {
         .withArgs(27)
         .resolves(certificationCenter);
 
-      const expectedScheduledSession = new Session({
+      const expectedScheduledSession = buildSession.withAccessCode({
+        id: null,
         certificationCenterId: 27,
         certificationCenterName: 'La France !',
         address: '11 avenue des peupliers',
@@ -62,7 +62,7 @@ describe('Unit | Domain | Usecases | schedule-session', () => {
         date: '2021-11-21',
         time: '12:21',
         description: 'Super session !',
-        accessCode: new AccessCode({ value: 'ABCD66' }),
+        accessCodeValue: 'ABCD66',
       });
 
       // when

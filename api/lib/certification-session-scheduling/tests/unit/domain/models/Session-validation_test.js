@@ -9,7 +9,8 @@ describe('Unit | Domain | Models | Session | validation', () => {
 
     beforeEach(() => {
       validAttributes = {
-        certificationCenterId: 123,
+        id: 123,
+        certificationCenterId: 456,
         certificationCenter: 'Centre des Anne-Etoiles', // vieillerie, ne plus l'écrire en BDD
         accessCode: 'AZER12',
         address: '3 rue des Églantines',
@@ -48,6 +49,7 @@ describe('Unit | Domain | Models | Session | validation', () => {
     });
 
     const invalidValuesByKey = {
+      id: ['test', -1, 1.5, 0, undefined],
       certificationCenterId: ['test', -1, 1.5, 0, null, undefined],
       address: [123, '', null, undefined],
       examiner: [123, '', null, undefined],
