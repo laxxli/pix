@@ -44,7 +44,6 @@ const dependencies = {
   certificationService: require('../../domain/services/certification-service'),
   challengeRepository: require('../../infrastructure/repositories/challenge-repository'),
   cleaCertificationResultRepository: require('../../infrastructure/repositories/clea-certification-result-repository'),
-  cleaCertificationStatusRepository: require('../../infrastructure/repositories/clea-certification-status-repository'),
   competenceEvaluationRepository: require('../../infrastructure/repositories/competence-evaluation-repository'),
   competenceMarkRepository: require('../../infrastructure/repositories/competence-mark-repository'),
   competenceRepository: require('../../infrastructure/repositories/competence-repository'),
