@@ -46,6 +46,10 @@ class CertificationAttestation {
   get hasAcquiredCleaCertification() {
     return this.cleaCertificationResult.isAcquired();
   }
+
+  get hasAcquiredAnyComplementaryCertification() {
+    return this.cleaCertificationResult.isAcquired() || this.certifiedBadgeImages.length > 0;
+  }
 }
 
 module.exports = CertificationAttestation;
