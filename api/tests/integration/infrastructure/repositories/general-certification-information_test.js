@@ -53,8 +53,8 @@ describe('Integration | Repository | Certification Course', function() {
           birthdate: certificationCourseDTO.birthdate,
           birthplace: certificationCourseDTO.birthplace,
           certificationIssueReports: [
-            { ...firstCertificationReport, isActionRequired: true },
-            { ...secondCertificationReport, isActionRequired: true },
+            { ...firstCertificationReport, isActionRequired: true, isAutoNeutralizable: false },
+            { ...secondCertificationReport, isActionRequired: true, isAutoNeutralizable: false },
           ],
         };
         expect(result).to.be.instanceOf(GeneralCertificationInformation);

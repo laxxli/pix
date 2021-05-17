@@ -34,6 +34,7 @@ describe('Integration | Repository | Certification Issue Report', function() {
         category: CertificationIssueReportCategories.IN_CHALLENGE,
         description: 'Un gros problème',
         isActionRequired: true,
+        isAutoNeutralizable: false,
         subcategory: CertificationIssueReportSubcategories.IMAGE_NOT_DISPLAYING,
         questionNumber: 5,
       };
@@ -93,7 +94,7 @@ describe('Integration | Repository | Certification Issue Report', function() {
       const result = await certificationIssueReportRepository.get(issueReport.id);
 
       // then
-      const expectedIssueReport = { ...issueReport, isActionRequired: true };
+      const expectedIssueReport = { ...issueReport, isActionRequired: true, isAutoNeutralizable: false };
       expect(result).to.deep.equal(expectedIssueReport);
       expect(result).to.be.instanceOf(CertificationIssueReport);
     });

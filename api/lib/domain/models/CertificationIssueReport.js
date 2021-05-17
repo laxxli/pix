@@ -97,6 +97,12 @@ const deprecatedSubcategories = {
   [CertificationIssueReportSubcategories.OTHER]: 'E7',
 };
 
+const autoNeutralizableSubcategories = {
+  [CertificationIssueReportSubcategories.WEBSITE_UNAVAILABLE]: 'E4',
+  [CertificationIssueReportSubcategories.WEBSITE_BLOCKED]: 'E5',
+  [CertificationIssueReportSubcategories.SOFTWARE_NOT_WORKING]: 'E9',
+};
+
 class CertificationIssueReport {
   constructor(
     {
@@ -114,6 +120,7 @@ class CertificationIssueReport {
     this.description = description;
     this.questionNumber = questionNumber;
     this.isActionRequired = _isActionRequired({ category, subcategory });
+    this.isAutoNeutralizable = _isSubcategoryAutoneutralizable(subcategory);
 
     if ([CertificationIssueReportCategories.CONNECTION_OR_END_SCREEN, CertificationIssueReportCategories.OTHER].includes(this.category)) {
       this.subcategory = null;
@@ -173,4 +180,8 @@ function _isActionRequired({ category, subcategory }) {
 
 function _isSubcategoryDeprecated(subcategory) {
   return Boolean(deprecatedSubcategories[subcategory]);
+}
+
+function _isSubcategoryAutoneutralizable(subcategory) {
+  return Boolean(autoNeutralizableSubcategories[subcategory]);
 }
