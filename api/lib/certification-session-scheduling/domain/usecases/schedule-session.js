@@ -1,3 +1,4 @@
+const SessionScheduled = require('../events/SessionScheduled');
 const { Session } = require('../models/Session');
 
 async function scheduleSession({
@@ -36,7 +37,9 @@ async function scheduleSession({
     description,
   }, random.pickOneFrom);
 
-  return sessionRepository.save(scheduledSession);
+  const sessionId = await sessionRepository.save(scheduledSession);
+
+  return new SessionScheduled({ sessionId });
 }
 
 class ReferentIsNotAMemberOfCertificationCenterError extends Error {

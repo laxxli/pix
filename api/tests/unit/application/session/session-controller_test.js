@@ -22,13 +22,14 @@ const { SessionPublicationBatchResult } = require('../../../../lib/domain/models
 const logger = require('../../../../lib/infrastructure/logger');
 const { SessionPublicationBatchError } = require('../../../../lib/application/http-errors');
 const usecaseScheduleSession = require('../../../../lib/certification-session-scheduling/domain/usecases');
+const SessionScheduled = require('../../../../lib/certification-session-scheduling/domain/events/SessionScheduled');
 
 describe('Unit | Controller | sessionController', () => {
 
   let request;
   let expectedSession;
   const userId = 274939274;
-  const sessionId = Symbol('sessionId');
+  const sessionId = 1234;
 
   describe('#schedule', () => {
 
@@ -44,8 +45,8 @@ describe('Unit | Controller | sessionController', () => {
         referentId: 274939274,
       };
 
-      sinon.stub(usecaseScheduleSession, 'scheduleSession').resolves(sessionId);
-      sinon.stub(usecaseScheduleSession, 'getSession').resolves({});
+      sinon.stub(usecaseScheduleSession, 'scheduleSession').resolves(new SessionScheduled({ sessionId }));
+      sinon.stub(sessionSerializer, 'serializeSessionScheduledEvent');
 
       request = {
         payload: {
@@ -76,6 +77,18 @@ describe('Unit | Controller | sessionController', () => {
 
       // then
       expect(usecaseScheduleSession.scheduleSession).to.have.been.calledWith(expectedSession);
+    });
+
+    it('should return a serialized scheduled session event', async () => {
+      // given
+      const sessionScheduled = new SessionScheduled({ sessionId: 1234 });
+      usecaseScheduleSession.scheduleSession.resolves(sessionScheduled);
+
+      // when
+      await sessionController.schedule(request, hFake);
+
+      // then
+      expect(sessionSerializer.serializeSessionScheduledEvent).to.have.been.calledWith(sessionScheduled);
     });
   });
 

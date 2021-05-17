@@ -50,7 +50,7 @@ module.exports = {
     return sessionSerializer.serialize(session);
   },
 
-  async schedule(request) {
+  async schedule(request, h) {
     const userId = request.auth.credentials.userId;
     const {
       'certification-center-id': certificationCenterId,
@@ -62,7 +62,7 @@ module.exports = {
       description,
     } = request.payload.data.attributes;
 
-    const sessionId = await certificationSessionSchedulingUsecases.scheduleSession({
+    const event = await certificationSessionSchedulingUsecases.scheduleSession({
       certificationCenterId,
       address,
       examiner,
@@ -73,11 +73,9 @@ module.exports = {
       referentId: userId,
     });
 
-    const session = await certificationSessionSchedulingUsecases.getSession({
-      sessionId,
-    });
+    const result = sessionSerializer.serializeSessionScheduledEvent(event);
 
-    return sessionSerializer.serialize(session);
+    return h.response(result).code(201);
   },
 
   async update(request) {

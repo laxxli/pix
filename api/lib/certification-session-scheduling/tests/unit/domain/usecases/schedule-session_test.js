@@ -1,4 +1,5 @@
 const { expect, sinon, catchErr } = require('../../../../../../tests/test-helper');
+const SessionScheduled = require('../../../../domain/events/SessionScheduled');
 const { CertificationCenter } = require('../../../../domain/models/CertificationCenter');
 const { scheduleSession, ReferentIsNotAMemberOfCertificationCenterError } = require('../../../../domain/usecases/schedule-session.js');
 const buildSession = require('../../../tooling/buildSession');
@@ -75,7 +76,7 @@ describe('Unit | Domain | Usecases | schedule-session', () => {
       expect(sessionRepository.save).to.have.been.calledWith(expectedScheduledSession);
     });
 
-    it('returns the scheduled session id', async () => {
+    it('returns a session scheduled event', async () => {
       const certificationCenterMembershipRepository = {
         exists: sinon.stub(),
       };
@@ -123,13 +124,14 @@ describe('Unit | Domain | Usecases | schedule-session', () => {
       sessionRepository.save.resolves(expectedSessionId);
 
       // when
-      const result = await scheduleSession({
+      const event = await scheduleSession({
         command,
         dependencies,
       });
 
       // then
-      expect(result).to.equal(expectedSessionId);
+      expect(event).to.be.an.instanceOf(SessionScheduled);
+      expect(event.sessionId).to.be.equal(expectedSessionId);
     });
   });
 
