@@ -22,6 +22,10 @@ describe('Unit | component | Campaigns | Evaluation | Skill Review', function() 
       model,
     });
 
+    const store = this.owner.lookup('service:store');
+    const adapter = store.adapterFor('campaign-participation-result');
+    adapter.share = sinon.stub().resolves();
+
     component.router.transitionTo = sinon.stub();
     component.disconnectUser = sinon.stub();
   });
@@ -33,12 +37,12 @@ describe('Unit | component | Campaigns | Evaluation | Skill Review', function() 
       await component.actions.shareCampaignParticipation.call(component);
 
       // then
-      expect(component.args.model.campaignParticipation.isShared).to.equal(true);
+      expect(component.args.model.campaignParticipationResult.isShared).to.equal(true);
     });
 
     it('should disconnect user if campaign has simplified access', async function() {
       // given
-      component.args.model.campaignParticipation.campaign.isSimplifiedAccess = true;
+      component.args.model.campaign.isSimplifiedAccess = true;
 
       // when
       await component.actions.shareCampaignParticipation.call(component);
