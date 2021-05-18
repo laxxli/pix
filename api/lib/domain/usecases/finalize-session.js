@@ -7,8 +7,10 @@ module.exports = async function finalizeSession({
   certificationReports,
   sessionRepository,
   certificationReportRepository,
+  certificationIssueReportRepository,
+  assessmentRepository,
+  certificationAssessmentRepository,
 }) {
-
   const isSessionAlreadyFinalized = await sessionRepository.isFinalized(sessionId);
 
   if (isSessionAlreadyFinalized) {
@@ -16,6 +18,15 @@ module.exports = async function finalizeSession({
   }
 
   certificationReports.forEach((certifReport) => certifReport.validateForFinalization());
+
+  for (const certificationReport of certificationReports) {
+    await _autoNeutralizeChallenges({
+      certificationReport,
+      assessmentRepository,
+      certificationIssueReportRepository,
+      certificationAssessmentRepository,
+    });
+  }
 
   await certificationReportRepository.finalizeAll(certificationReports);
 
@@ -34,3 +45,23 @@ module.exports = async function finalizeSession({
     sessionTime: finalizedSession.time,
   });
 };
+
+async function _autoNeutralizeChallenges({
+  certificationReport,
+  certificationIssueReportRepository,
+  certificationAssessmentRepository,
+}) {
+  const { certificationCourseId } = certificationReport;
+  const certificationIssueReports = await certificationIssueReportRepository.findByCertificationCourseId(certificationCourseId);
+  if (certificationIssueReports.length === 0) {
+    return;
+  }
+  const certificationAssessment = await certificationAssessmentRepository.getByCertificationCourseId({ certificationCourseId });
+  const neutralizableQuestionNumbers = certificationIssueReports
+    .filter((issueReport) => issueReport.isAutoNeutralizable)
+    .map((issueReport) => issueReport.questionNumber);
+
+  neutralizableQuestionNumbers.forEach((questionNumber) => certificationAssessment.neutralizeChallengeByNumberIfKoOrSkipped(questionNumber));
+
+  await certificationAssessmentRepository.save(certificationAssessment);
+}
