@@ -138,11 +138,10 @@ export default class SkillReview extends Component {
   }
 
   @action
-  async improvementCampaignParticipation() {
-    const assessment = this.args.model.assessment;
-    const campaignParticipation = this.args.model.campaignParticipation;
-    await campaignParticipation.save({ adapterOptions: { beginImprovement: true } });
-    return this.router.transitionTo('campaigns.start-or-resume', assessment.codeCampaign);
+  async improve() {
+    const adapter = this.store.adapterFor('campaign-participation-result');
+    await adapter.beginImprovement();
+    return this.router.transitionTo('campaigns.start-or-resume', this.args.model.campaign.code);
   }
 
   async disconnectUser() {
