@@ -48,4 +48,9 @@ export default class Assessment extends Model {
     return answers.slice(sliceAnswersFrom);
   }
 
+  @computed('answers.[]')
+  get challengeNumber() {
+    return this.answers.length;
+  }
+
 }
