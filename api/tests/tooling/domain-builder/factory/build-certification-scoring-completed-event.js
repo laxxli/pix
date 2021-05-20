@@ -14,30 +14,4 @@ const buildCertificationScoringCompletedEvent = function({
   });
 };
 
-buildCertificationScoringCompletedEvent.validated = function({
-  certificationCourseId,
-  userId,
-  reproducibilityRate,
-} = {}) {
-  return buildCertificationScoringCompletedEvent({
-    certificationCourseId,
-    userId,
-    reproducibilityRate,
-    isValidated: true,
-  });
-};
-
-buildCertificationScoringCompletedEvent.rejected = function({
-  certificationCourseId,
-  userId,
-  reproducibilityRate,
-} = {}) {
-  return buildCertificationScoringCompletedEvent({
-    certificationCourseId,
-    userId,
-    reproducibilityRate,
-    isValidated: false,
-  });
-};
-
 module.exports = buildCertificationScoringCompletedEvent;
