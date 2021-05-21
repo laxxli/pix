@@ -75,6 +75,22 @@ exports.register = async (server) => {
         ],
       },
     },
+    // {
+    //   method: 'GET',
+    //   path: '/api/admin/organizations/{id}/tags',
+    //   config: {
+    //     pre: [{
+    //       method: securityPreHandlers.checkUserHasRolePixMaster,
+    //       assign: 'hasRolePixMaster',
+    //     }],
+    //     handler: tagController.findAllTags,
+    //     notes: [
+    //       '- **Cette route est restreinte aux utilisateurs authentifiés avec le rôle Pix Master**\n' +
+    //     '- Renvoie tous les tags.',
+    //     ],
+    //     tags: ['api', 'tags'],
+    //   },
+    // },
     {
       method: 'PATCH',
       path: '/api/organizations/{id}',
