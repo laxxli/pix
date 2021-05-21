@@ -3,6 +3,7 @@ const Joi = require('joi')
 const { validateEntity } = require('../validators/entity-validator');
 const _ = require('lodash');
 const { ChallengeToBeNeutralizedNotFoundError, ChallengeToBeDeneutralizedNotFoundError } = require('../errors');
+const AnswerStatus = require('./AnswerStatus');
 
 const states = {
   COMPLETED: 'completed',
@@ -60,6 +61,16 @@ class CertificationAssessment {
     }
   }
 
+  neutralizeChallengeByNumberIfKoOrSkipped(questionNumber) {
+    const toBeNeutralizedChallengeAnswer = this.certificationAnswersByDate[questionNumber - 1];
+    if (!toBeNeutralizedChallengeAnswer) {
+      throw new ChallengeToBeNeutralizedNotFoundError();
+    } else if (toBeNeutralizedChallengeAnswer && _isAnswerKoOrSkipped(toBeNeutralizedChallengeAnswer.result.status)) {
+      const challengeToBeNeutralized = _.find(this.certificationChallenges, { challengeId: toBeNeutralizedChallengeAnswer.challengeId });
+      challengeToBeNeutralized.neutralize();
+    }
+  }
+
   deneutralizeChallengeByRecId(recId) {
     const challengeToBeDeneutralized = _.find(this.certificationChallenges, { challengeId: recId });
     if (challengeToBeDeneutralized) {
@@ -90,6 +101,12 @@ class CertificationAssessment {
   isCompleted() {
     return this.state === states.COMPLETED;
   }
+}
+
+function _isAnswerKoOrSkipped(answerStatus) {
+  const isKo = AnswerStatus.isKO(answerStatus);
+  const isSkipped = AnswerStatus.isSKIPPED(answerStatus);
+  return (isKo || isSkipped);
 }
 
 CertificationAssessment.states = states;
