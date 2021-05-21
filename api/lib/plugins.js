@@ -66,6 +66,7 @@ const plugins = [
     {
       plugin: require('hapi-sentry'),
       options: {
+        catchLogErrors: ['error'],
         client: {
           dsn: settings.sentry.dsn,
           environment: settings.sentry.environment,
