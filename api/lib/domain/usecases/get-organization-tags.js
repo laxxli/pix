@@ -1,11 +1,11 @@
-module.exports = async function getOrganizationTags({
+const getOrganizationTags = async function({
   organizationId,
   organizationTagRepository,
   tagRepository,
 }) {
 
   const tags = await tagRepository.findAll();
-  const organizationTags = await organizationTagRepository.findTagIdsByOrganizationId(organizationId);
+  const organizationTags = await organizationTagRepository.findTagIdsByOrganizationId({organizationId});
 
   const tagsWithIsAssignedProperty = tags.map((tag) => {
     const isAssigned = organizationTags.includes(tag.id);
@@ -14,3 +14,5 @@ module.exports = async function getOrganizationTags({
 
   return tagsWithIsAssignedProperty;
 };
+
+module.exports = getOrganizationTags;

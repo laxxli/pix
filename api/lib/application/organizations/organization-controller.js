@@ -9,6 +9,7 @@ const membershipSerializer = require('../../infrastructure/serializers/jsonapi/m
 const organizationSerializer = require('../../infrastructure/serializers/jsonapi/organization-serializer');
 const organizationInvitationSerializer = require('../../infrastructure/serializers/jsonapi/organization-invitation-serializer');
 const targetProfileSerializer = require('../../infrastructure/serializers/jsonapi/target-profile-serializer');
+const tagSerializer = require('../../infrastructure/serializers/jsonapi/tag-serializer');
 const userWithSchoolingRegistrationSerializer = require('../../infrastructure/serializers/jsonapi/user-with-schooling-registration-serializer');
 const higherSchoolingRegistrationWarningSerializer = require('../../infrastructure/serializers/jsonapi/higher-schooling-registration-warnings-serializer');
 const HigherSchoolingRegistrationParser = require('../../infrastructure/serializers/csv/higher-schooling-registration-parser');
@@ -20,7 +21,7 @@ const certificationResultUtils = require('../../infrastructure/utils/csv/certifi
 module.exports = {
 
   getOrganizationDetails: (request) => {
-    const organizationId = parseInt(request.params.id);
+    const organizationId = request.params.id;
 
     return usecases.getOrganizationDetails({ organizationId })
       .then(organizationSerializer.serialize);

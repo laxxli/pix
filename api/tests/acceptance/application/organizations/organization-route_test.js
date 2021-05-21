@@ -11,7 +11,7 @@ describe('Acceptance | Route | organization-router', () => {
 
   describe('GET /api/admin/organizations/{id}/tags', () => {
 
-    it.only('should return a list of tags with 200 HTTP status code', async () => {
+    it('should return a list of tags with 200 HTTP status code', async () => {
       // given
       const server = await createServer();
       const organizationId = databaseBuilder.factory.buildOrganization().id;
@@ -24,7 +24,7 @@ describe('Acceptance | Route | organization-router', () => {
 
       const options = {
         method: 'GET',
-        url: '/api/admin/organizations/{id}/tags',
+        url: `/api/admin/organizations/${organizationId}/tags`,
         headers: { authorization: generateValidRequestAuthorizationHeader(userId) },
       };
 
