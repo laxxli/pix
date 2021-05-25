@@ -16,7 +16,7 @@ function _csvSerializeValue(data) {
     }
   } else {
     logger.error(`Unknown value type in _csvSerializeValue: ${typeof data}: ${data}`);
-    return '""';
+    return '"null"';
   }
 }
 
