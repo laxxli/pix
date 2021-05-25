@@ -64,6 +64,7 @@ class Challenge {
       skills = [],
       validator,
       competenceId,
+      focusable,
     } = {}) {
     this.id = id;
     this.answer = answer;
@@ -85,6 +86,7 @@ class Challenge {
     this.skills = skills;
     this.validator = validator;
     this.competenceId = competenceId;
+    this.focusable = focusable;
   }
 
   addSkill(skill) {

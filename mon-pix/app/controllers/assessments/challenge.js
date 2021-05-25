@@ -15,6 +15,11 @@ export default class ChallengeController extends Controller {
   @tracked competenceLeveled = null;
   @tracked challengeTitle = defaultPageTitle;
 
+  @action
+  hasLeftTab() {
+    console.log('user has left the tab');
+  }
+
   get showLevelup() {
     return this.model.assessment.showLevelup && this.newLevel;
   }

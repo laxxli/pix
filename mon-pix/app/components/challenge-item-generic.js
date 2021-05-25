@@ -11,6 +11,19 @@ export default class ChallengeItemGeneric extends Component {
   @tracked hasChallengeTimedOut = false;
   @tracked errorMessage = null;
 
+  constructor() {
+    super(...arguments);
+    if (this.args.challenge.focus) {
+      setInterval(this.checkFocus, 1000);
+    }
+  }
+
+  checkFocus() {
+    if (document.hasFocus() === false) {
+      alert('test');
+    }
+  }
+
   get isTimedChallenge() {
     return isInteger(this.args.challenge.timer);
   }
