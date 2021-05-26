@@ -1,10 +1,11 @@
-const { domainBuilder, expect, sinon } = require('../../../test-helper');
+const { domainBuilder, expect, sinon, catchErr } = require('../../../test-helper');
 const createUserFromPoleEmploi = require('../../../../lib/domain/usecases/create-user-from-pole-emploi');
 const DomainTransaction = require('../../../../lib/infrastructure/DomainTransaction');
 const AuthenticationMethod = require('../../../../lib/domain/models/AuthenticationMethod');
 const User = require('../../../../lib/domain/models/User');
 const authenticationCache = require('../../../../lib/infrastructure/caches/authentication-cache');
 const moment = require('moment');
+const { InvalidExternalAPIResponseError } = require('../../../../lib/domain/errors');
 
 describe('Unit | UseCase | create-user-from-pole-emploi', () => {
 
@@ -94,6 +95,38 @@ describe('Unit | UseCase | create-user-from-pole-emploi', () => {
       expect(authenticationMethodRepository.create).to.have.been.calledWith({ authenticationMethod: expectedAuthenticationMethod, domainTransaction });
       expect(response.userId).to.equal(userId);
       expect(response.idToken).to.equal(userCredentials.idToken);
+    });
+
+    it('should raise an error if required properties are not returned by external API', async () => {
+      // given
+      const authenticationKey = 'authenticationKey';
+      const userCredentials = {
+        accessToken: 'accessToken',
+        idToken: 'idToken',
+        expiresIn: 10,
+        refreshToken: 'refreshToken',
+      };
+      authenticationCacheGetStub.withArgs(authenticationKey).resolves(userCredentials);
+      const decodedUserInfo = {
+        firstName: 'Jean',
+        lastName: undefined,
+        externalIdentityId: 'externalIdentityId',
+        nonce: 'nonce',
+      };
+
+      authenticationService.getPoleEmploiUserInfo.withArgs(userCredentials.idToken).resolves(decodedUserInfo);
+
+      // when
+      const error = await catchErr(createUserFromPoleEmploi)({
+        authenticationKey,
+        userRepository,
+        authenticationMethodRepository,
+        authenticationService,
+      });
+
+      // then
+      expect(error).to.be.instanceOf(InvalidExternalAPIResponseError);
+      expect(error.message).to.be.equal('Un des champs obligatoires n\'est pas renseigné dans l\'ID token PoleEmploi');
     });
   });
 

@@ -3,6 +3,7 @@ const User = require('../models/User');
 const AuthenticationMethod = require('../models/AuthenticationMethod');
 const DomainTransaction = require('../../infrastructure/DomainTransaction');
 const authenticationCache = require('../../infrastructure/caches/authentication-cache');
+const { InvalidExternalAPIResponseError } = require('../errors');
 
 module.exports = async function createUserFromPoleEmploi({
   authenticationKey,
@@ -12,6 +13,10 @@ module.exports = async function createUserFromPoleEmploi({
 }) {
   const userCredentials = await authenticationCache.get(authenticationKey);
   const userInfo = await authenticationService.getPoleEmploiUserInfo(userCredentials.idToken);
+
+  if (userInfo.given_name === undefined || userInfo.family_name === undefined || userInfo.externalIdentityId === undefined) {
+    throw new InvalidExternalAPIResponseError('Un des champs obligatoires n\'est pas renseigné dans l\'ID token PoleEmploi');
+  }
 
   const authenticationMethod = await authenticationMethodRepository.findOneByExternalIdentifierAndIdentityProvider({
     externalIdentifier: userInfo.externalIdentityId,
