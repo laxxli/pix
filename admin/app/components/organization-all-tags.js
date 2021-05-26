@@ -23,4 +23,14 @@ export default class OrganizationAllTags extends Component {
     this.args.model.organization.set('tags', organizationTags);
     await this.args.model.organization.save();
   }
+
+  @action
+  async removeTagToOrganization(tagToRemove) {
+    const organizationTags = this.args.model.organization.tags.toArray();
+    const organizationTagsUpdated = organizationTags.filter((tag) => {
+      return tag.id !== tagToRemove.id;
+    });
+    this.args.model.organization.set('tags', organizationTagsUpdated);
+    await this.args.model.organization.save();
+  }
 }

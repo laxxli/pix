@@ -6,9 +6,11 @@
         <li class="organization-all-tags-list__tag">
 
           {{#if tag.isTagAssignedToOrganization}}
-            <PixTag @compact="true" @color='purple-light'>
-              {{tag.name}}
-            </PixTag>
+            <button onClick={{fn this.removeTagToOrganization tag}}>
+              <PixTag @compact="true" @color='purple-light'>
+                {{tag.name}}
+              </PixTag>
+            </button>
           {{else}}
             <button onClick={{fn this.addTagToOrganization tag}}>
               <PixTag @compact="true" @color='grey-light'>
