@@ -43,6 +43,23 @@ exports.register = async function(server) {
     },
     {
       method: 'GET',
+      path: '/api/assessments/{id}/current-challenge-id',
+      config: {
+        auth: false,
+        validate: {
+          params: Joi.object({
+            id: identifiersType.assessmentId,
+          }),
+        },
+        handler: assessmentController.getCurrentChallengeId,
+        notes: [
+          '- Récupération de la question courante pour l\'évaluation donnée',
+        ],
+        tags: ['api'],
+      },
+    },
+    {
+      method: 'GET',
       path: '/api/assessments/{id}',
       config: {
         auth: false,

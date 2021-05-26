@@ -53,12 +53,16 @@ module.exports = {
     };
     logger.trace(logContext, 'tracing assessmentController.getNextChallenge()');
 
+    const locale = extractLocaleFromRequest(request);
+    const tryImproving = request.query ? Boolean(request.query.tryImproving) : false;
+    const userId = extractUserIdFromRequest(request);
+
     try {
       const assessment = await assessmentRepository.get(parseInt(request.params.id));
       logContext.assessmentType = assessment.type;
       logger.trace(logContext, 'assessment loaded');
 
-      const challenge = await _getChallenge(assessment, request);
+      const challenge = await _getChallenge({ assessment, tryImproving, userId, locale });
       logContext.challenge = challenge;
       logger.trace(logContext, 'replying with challenge');
 
@@ -70,6 +74,27 @@ module.exports = {
       }
       throw error;
     }
+  },
+
+  async getCurrentChallengeId(request) {
+    console.log('--- IN');
+    const assessmentId = parseInt(request.params.id);
+
+    // userId locale tryImproving
+    try {
+      const assessment = await assessmentRepository.get(assessmentId);
+
+      // const challenge = await _getChallenge(assessment, request);
+
+      return null;
+    } catch (error) {
+      if (error instanceof AssessmentEndedError) {
+        const object = new JSONAPISerializer('', {});
+        return object.serialize(null);
+      }
+      throw error;
+    }
+
   },
 
   async completeAssessment(request) {
@@ -91,9 +116,7 @@ module.exports = {
   },
 };
 
-async function _getChallenge(assessment, request) {
-  const locale = extractLocaleFromRequest(request);
-
+async function _getChallenge({ assessment, tryImproving, userId, locale }) {
   if (assessment.isStarted()) {
     await assessmentRepository.updateLastQuestionDate({ id: assessment.id, lastQuestionDate: new Date() });
   }
@@ -111,12 +134,10 @@ async function _getChallenge(assessment, request) {
   }
 
   if (assessment.isForCampaign()) {
-    const tryImproving = Boolean(request.query.tryImproving);
     return usecases.getNextChallengeForCampaignAssessment({ assessment, tryImproving, locale });
   }
 
   if (assessment.isCompetenceEvaluation()) {
-    const userId = extractUserIdFromRequest(request);
     return usecases.getNextChallengeForCompetenceEvaluation({ assessment, userId, locale });
   }
 }

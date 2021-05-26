@@ -4,6 +4,7 @@ const usecases = require('../../../../lib/domain/usecases');
 const events = require('../../../../lib/domain/events');
 const assessmentSerializer = require('../../../../lib/infrastructure/serializers/jsonapi/assessment-serializer');
 const AssessmentCompleted = require('../../../../lib/domain/events/AssessmentCompleted');
+const assessmentRepository = require('../../../../lib/infrastructure/repositories/assessment-repository');
 
 describe('Unit | Controller | assessment-controller', function() {
 
@@ -235,6 +236,22 @@ describe('Unit | Controller | assessment-controller', function() {
           },
         },
       ]);
+    });
+  });
+
+  describe('#getCurrentChallengeId', () => {
+    it('should get assessment', async () => {
+      const assessment = {};
+      const request = {
+        params: {
+          id: 678,
+        },
+      };
+      sinon.stub(assessmentRepository, 'get').resolves(assessment);
+
+      await assessmentController.getCurrentChallengeId(request);
+
+      expect(assessmentRepository.get).to.have.been.called;
     });
   });
 });
