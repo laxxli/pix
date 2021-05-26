@@ -4,7 +4,7 @@ module.exports = {
 
   serialize(tags) {
     return new Serializer('tags', {
-      attributes: ['name', 'isAssigned'],
+      attributes: ['name'],
     }).serialize(tags);
   },
 
