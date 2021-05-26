@@ -181,11 +181,4 @@ module.exports = {
       .header('Content-Type', 'text/csv;charset=utf-8')
       .header('Content-Disposition', `attachment; filename=${request.i18n.__('csv-template.template-name')}.csv`);
   },
-
-  async getOrganizationTags(request, h) {
-    const organizationId = parseInt(request.params.id);
-
-    const tags = await usecases.getOrganizationTags({ organizationId });
-    return tagSerializer.serialize(tags);
-  },
 };
